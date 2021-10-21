@@ -1,28 +1,33 @@
-Trace-VstsEnteringInvocation $MyInvocation
-Import-VstsLocStrings "$PSScriptRoot\Task.json"
+[CmdletBinding()]
+Param (
+    [Parameter(Mandatory = $true)]
+    [String]$ServiceName,
+    [Parameter(Mandatory = $true)]
+    [String]$ServiceLocation,
+    [Parameter(Mandatory = $true)]
+    [String]$StorageAccount,
+    [Parameter(Mandatory = $true)]
+    [String]$CsPkg,
+    [Parameter(Mandatory = $true)]
+    [String]$CsCfg
+)
 
 try{
+    $Slot = Production
+    $DeploymentLabel = '$(Build.BuildNumber)'
+    $AppendDateTimeToLabel = $false
+    $AllowUpgrade = $true
+    $SimultaneousUpgrade = $false
+    $ForceUpgrade = $false
+    $VerifyRoleInstanceStatus = $false
+    $DiagnosticStorageAccountKeys = ""
+    $NewServiceAdditionalArguments = ""
+    $NewServiceAffinityGroup = ""
+    $NewServiceCustomCertificates = ""
 
-    $ServiceName = Get-VstsInput -Name ServiceName -Require
-    $ServiceLocation = Get-VstsInput -Name ServiceLocation
-    $StorageAccount = Get-VstsInput -Name StorageAccount
-    $CsPkg = Get-VstsInput -Name CsPkg -Require
-    $CsCfg = Get-VstsInput -Name CsCfg -Require
-    $Slot = Get-VstsInput -Name Slot -Require
-    $DeploymentLabel = Get-VstsInput -Name DeploymentLabel
-    $AppendDateTimeToLabel = Get-VstsInput -Name AppendDateTimeToLabel -Require -AsBool
-    $AllowUpgrade = Get-VstsInput -Name AllowUpgrade -Require -AsBool
-    $SimultaneousUpgrade = Get-VstsInput -Name SimultaneousUpgrade -AsBool
-    $ForceUpgrade = Get-VstsInput -Name ForceUpgrade -AsBool
-    $VerifyRoleInstanceStatus = Get-VstsInput -Name VerifyRoleInstanceStatus -AsBool
-    $DiagnosticStorageAccountKeys = Get-VstsInput -Name DiagnosticStorageAccountKeys
-    $NewServiceAdditionalArguments = Get-VstsInput -Name NewServiceAdditionalArguments
-    $NewServiceAffinityGroup = Get-VstsInput -Name NewServiceAffinityGroup
-    $NewServiceCustomCertificates = Get-VstsInput -Name NewServiceCustomCertificates
-
-    $EnableAdvancedStorageOptions = Get-VstsInput -Name EnableAdvancedStorageOptions -AsBool
-    $ARMConnectedServiceName = Get-VstsInput -Name ARMConnectedServiceName
-    $ARMStorageAccount = Get-VstsInput -Name ARMStorageAccount
+    $EnableAdvancedStorageOptions = $false
+    $ARMConnectedServiceName = ""
+    $ARMStorageAccount = ""
 
     # Initialize Azure.
     Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
